@@ -18,9 +18,31 @@ class InputPage extends StatefulWidget {
 
 class _InputPageState extends State<InputPage> {
   Gender? selectedGender;
-  int height = 50;
-  int weight = 40;
-  int age = 18;
+  int height = 0;
+  int weight = 0;
+  int age = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    initProperties();
+  }
+
+  void initProperties() {
+    setState(() {
+      height = 50;
+      weight = 40;
+      age = 18;
+    });
+    print('initProperties');
+  }
+
+  @override
+  void deactivate() {
+    print('deactivate1');
+    super.deactivate();
+    print('deactivate2');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -187,16 +209,19 @@ class _InputPageState extends State<InputPage> {
               ),
             ),
             ButtonForCalculate(
-              () {
+              () async {
                 CalculatorBrain calc = CalculatorBrain(height, weight);
                 // Navigator.pushNamed(context, '\\result', arguments: Results(calc.calculateBMI(), calc.getResult(), calc.getInterpretation()));
-                Navigator.push(
+                var initialize = await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => Results(calc.calculateBMI(),
                         calc.getResult(), calc.getInterpretation()),
                   ),
                 );
+                if (initialize == true) {
+                  initProperties();
+                }
               },
               'BMI CALCULATOR',
             ),
